@@ -1,0 +1,62 @@
+version: '3.8'
+services:
+  n8n:
+    image: n8nio/n8n
+    restart: unless-stopped
+    user: root
+    ports:
+      - '443:5678' # n8n will handle HTTPS directly on 5678
+      - '80:80' # Needed for certbot's HTTP-01 challenge
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./certs:/etc/letsencrypt
+      - ./config:/home/node/.n8n
+    environment:
+      - N8N_EDITOR_BASE_URL=${N8N_URL}
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - N8N_PROTOCOL=https
+      - N8N_HOST=${N8N_HOST}
+      - DUCKDNS_TOKEN=${DUCKDNS_TOKEN}
+      - N8N_SSL_KEY=/etc/letsencrypt/live/${N8N_HOST}/privkey.pem
+      - N8N_SSL_CERT=/etc/letsencrypt/live/${N8N_HOST}/fullchain.pem
+      - NODE_ENV=production
+
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        apk update && apk add --no-cache \
+          certbot \
+          curl \
+          su-exec \
+
+        curl -s "https://www.duckdns.org/update?domains=${N8N_HOST%%.*}&token=${DUCKDNS_TOKEN}&ip="
+
+        if [ ! -f /etc/letsencrypt/live/${N8N_HOST}/fullchain.pem ]; then
+          certbot certonly --standalone -n --agree-tos \
+            -m {CERTBOT_EMAIL} \
+            -d ${N8N_HOST} \
+            --preferred-challenges http
+          chown -R node:node /etc/letsencrypt
+        fi
+
+        # Fix permissions and start as node user
+        chown -R node:node /home/node/.n8n
+        exec su-exec node n8n start
+    networks:
+      - n8n_network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+volumes:
+  n8n_data:
+
+networks:
+  n8n_network:
+    driver: bridge
