@@ -24,18 +24,18 @@ This guide demonstrates a basic setup for learning and testing purposes. It is *
 
 ### When to Use This Guide
 
-✅ Learning how n8n works
-✅ Testing and development
-✅ Personal projects
-✅ Proof of concept
+- ✅ Learning how n8n works
+- ✅ Testing and development
+- ✅ Personal projects
+- ✅ Proof of concept
 
 ### When NOT to Use This Guide
 
-❌ Business-critical workflows
-❌ Processing sensitive data
-❌ High-availability requirements
-❌ Production environments
-❌ Enterprise deployments
+- ❌ Business-critical workflows
+- ❌ Processing sensitive data
+- ❌ High-availability requirements
+- ❌ Production environments
+- ❌ Enterprise deployments
 
 ## 📁 Files Included
 
