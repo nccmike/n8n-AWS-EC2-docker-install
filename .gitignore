@@ -1,0 +1,10 @@
+# Sensitive Files
+.env
+certs/
+config/
+
+# Logs
+*.log
+
+# Runtime data
+data/

@@ -40,7 +40,7 @@ This guide demonstrates a basic setup for learning and testing purposes. It is *
 ## 📁 Files Included
 
 - `docker-compose.yaml` – defines the n8n service and persistent volume
-- `.env` – stores environment-specific credentials and configuration
+- `.env.example` – stores environment-specific credentials and configuration
 - `README.md` – deployment instructions
 
 ## ✅ Prerequisites
@@ -96,6 +96,7 @@ docker volume create n8n_data
    | `N8N_URL` | Full external URL used for tunnel/webhooks |
    | `N8N_ENCRYPTION_KEY` | 32 Bit Encryption key |
    | `DUCKDNS_TOKEN` | The token provided by Duck DNS |
+   | `CERTBOT_EMAIL` | Use your email for cert registration |
 
 - For information regarding N8N variables, see [N8N Docs](https://docs.n8n.io/hosting/configuration/environment-variables)
 
