@@ -17,6 +17,7 @@ services:
       - N8N_PROTOCOL=https
       - N8N_HOST=${N8N_HOST}
       - DUCKDNS_TOKEN=${DUCKDNS_TOKEN}
+      - CERTBOT_EMAIL=${CERTBOT_EMAIL}
       - N8N_SSL_KEY=/etc/letsencrypt/live/${N8N_HOST}/privkey.pem
       - N8N_SSL_CERT=/etc/letsencrypt/live/${N8N_HOST}/fullchain.pem
       - NODE_ENV=production
@@ -30,12 +31,12 @@ services:
           curl \
           su-exec \
 
-        curl -s "https://www.duckdns.org/update?domains=${N8N_HOST%%.*}&token=${DUCKDNS_TOKEN}&ip="
+        curl -s "https://www.duckdns.org/update?domains=$${N8N_HOST%%.*}&token=$${DUCKDNS_TOKEN}&ip="
 
-        if [ ! -f /etc/letsencrypt/live/${N8N_HOST}/fullchain.pem ]; then
+        if [ ! -f /etc/letsencrypt/live/$${N8N_HOST}/fullchain.pem ]; then
           certbot certonly --standalone -n --agree-tos \
-            -m {CERTBOT_EMAIL} \
-            -d ${N8N_HOST} \
+            -m $${CERTBOT_EMAIL} \
+            -d $${N8N_HOST} \
             --preferred-challenges http
           chown -R node:node /etc/letsencrypt
         fi
